@@ -1,0 +1,39 @@
+package com.example.dbdemo.service;
+
+import com.example.dbdemo.dao.JiaoshiDAO;
+import com.example.dbdemo.dao.KechengDAO;
+import com.example.dbdemo.dao.XueshengDAO;
+import com.example.dbdemo.dao.YonghuDAO;
+import com.example.dbdemo.bean.Yonghu;
+import com.example.dbdemo.util.DBUtil;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class AdminService {
+    private final XueshengDAO xueshengDAO = new XueshengDAO();
+    private final JiaoshiDAO jiaoshiDAO = new JiaoshiDAO();
+    private final KechengDAO kechengDAO = new KechengDAO();
+    private final YonghuDAO yonghuDAO = new YonghuDAO();
+
+    public Map<String, Integer> getSystemStats() {
+        Map<String, Integer> stats = new HashMap<>();
+        try (Connection conn = DBUtil.getConnection()) {
+            stats.put("studentCount", xueshengDAO.findAll().size());
+            stats.put("teacherCount", jiaoshiDAO.findAll(conn).size());
+            stats.put("courseCount", kechengDAO.findAll().size());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return stats;
+    }
+
+    public List<Yonghu> getUsers(String zyc_zh, String zyc_qx) {
+        // 需实现YonghuDAO的相关查询方法，这里仅返回全部用户
+        return Collections.emptyList();
+    }
+}
