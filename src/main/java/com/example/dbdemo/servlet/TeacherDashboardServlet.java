@@ -24,21 +24,19 @@ public class TeacherDashboardServlet extends HttpServlet {
         Yonghu yonghu = (session != null) ? (Yonghu) session.getAttribute("user") : null;
 
         if (yonghu != null && "教师".equals(yonghu.getZyc_qx())) {
-            // Get teacher's workload info
             Jiaoshi teacherInfo = teacherService.getTeacherInfo(yonghu.getZyc_zh());
             request.setAttribute("teacherInfo", teacherInfo);
 
-            // Get semester from request parameter for filtering
             String semester = request.getParameter("semester");
+            String courseName = request.getParameter("courseName");
 
-            // Get teacher's course list
-            List<Map<String, Object>> courseList = teacherService.getTaughtCourses(yonghu.getZyc_zh(), semester);
+            List<Map<String, Object>> courseList = teacherService.getMyTaughtCourses(yonghu.getZyc_zh(), semester, courseName);
             request.setAttribute("courseList", courseList);
             request.setAttribute("selectedSemester", semester);
+            request.setAttribute("selectedCourseName", courseName);
 
             request.getRequestDispatcher("/teacher/dashboard.jsp").forward(request, response);
         } else {
-            // If user is not a teacher or not logged in, redirect to login
             response.sendRedirect(request.getContextPath() + "/login.jsp");
         }
     }

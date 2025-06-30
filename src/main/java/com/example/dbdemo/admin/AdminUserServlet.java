@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @WebServlet("/admin/user")
 public class AdminUserServlet extends HttpServlet {
@@ -52,6 +53,11 @@ public class AdminUserServlet extends HttpServlet {
                 req.setAttribute("msg", "密码已重置为账号后六位: " + defaultPwd);
             }
             req.getRequestDispatcher("/admin/user/list.jsp").forward(req, resp);
+        } else if ("dashboard".equals(action)) {
+            com.example.dbdemo.service.AdminStatsService statsService = new com.example.dbdemo.service.AdminStatsService();
+            Map<String, Integer> diquStats = statsService.getStudentCountByDiqu();
+            req.setAttribute("diquStats", diquStats);
+            req.getRequestDispatcher("/admin/dashboard.jsp").forward(req, resp);
         }
     }
     @Override

@@ -36,4 +36,21 @@ public class AdminService {
         // 需实现YonghuDAO的相关查询方法，这里仅返回全部用户
         return Collections.emptyList();
     }
+
+    public Map<String, Integer> getStudentCountByDiqu() {
+        Map<String, Integer> map = new java.util.LinkedHashMap<>();
+        try (java.sql.Connection conn = com.example.dbdemo.util.DBUtil.getConnection()) {
+            String sql = "SELECT d.zyc_dqmc, COUNT(x.zyc_xh) AS cnt FROM zhouyc_diqu d LEFT JOIN zhouyc_xuesheng x ON d.zyc_dqbh = x.zyc_syd GROUP BY d.zyc_dqmc ORDER BY cnt DESC, d.zyc_dqmc ASC";
+            java.sql.PreparedStatement ps = conn.prepareStatement(sql);
+            java.sql.ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                map.put(rs.getString("zyc_dqmc"), rs.getInt("cnt"));
+            }
+            rs.close();
+            ps.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
 }

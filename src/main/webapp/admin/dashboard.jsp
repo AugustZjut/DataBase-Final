@@ -20,6 +20,9 @@
         .module-card:hover { box-shadow: 0 4px 16px rgba(220,53,69,0.15); }
         .module-card a { display: block; color: #dc3545; font-size: 1.3rem; font-weight: bold; text-decoration: none; margin-bottom: 0.5rem; }
         .module-card p { color: #555; font-size: 1rem; }
+        table { width: 100%; margin-top: 1rem; border-collapse: collapse; }
+        th, td { padding: 0.5rem 1rem; text-align: left; }
+        th { background: #f2f2f2; }
         @media (max-width: 900px) {
             .nav-modules { flex-direction: column; }
             .module-card { margin: 1rem 0; }
@@ -50,6 +53,45 @@
                     <p>${stats.courseCount}</p>
                 </div>
             </div>
+        </c:if>
+
+        <c:if test="${not empty diquStats}">
+            <div class="stat-card" style="width:100%;margin:2rem auto;">
+                <h3 style="color:#28a745;">学生生源地统计</h3>
+                <canvas id="diquPieChart" width="600" height="320"></canvas>
+            </div>
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script>
+                const diquData = {
+                    labels: [
+                        <c:forEach var="entry" items="${diquStats}" varStatus="status">
+                            "${entry.key}"<c:if test="${!status.last}">,</c:if>
+                        </c:forEach>
+                    ],
+                    datasets: [{
+                        data: [
+                            <c:forEach var="entry" items="${diquStats}" varStatus="status">
+                                ${entry.value}<c:if test="${!status.last}">,</c:if>
+                            </c:forEach>
+                        ],
+                        backgroundColor: [
+                            '#FF6384','#36A2EB','#FFCE56','#4BC0C0','#9966FF','#FF9F40','#C9CBCF','#FF6384','#36A2EB','#FFCE56'
+                        ],
+                    }]
+                };
+                const ctx = document.getElementById('diquPieChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: diquData,
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { position: 'right' },
+                            title: { display: false }
+                        }
+                    }
+                });
+            </script>
         </c:if>
 
         <h2>基础管理模块</h2>

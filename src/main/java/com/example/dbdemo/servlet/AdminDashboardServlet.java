@@ -37,6 +37,10 @@ public class AdminDashboardServlet extends HttpServlet {
             request.setAttribute("searchUsername", searchUsername);
             request.setAttribute("searchRole", searchRole);
 
+            // Get student count by region
+            Map<String, Integer> diquStats = adminService.getStudentCountByDiqu();
+            request.setAttribute("diquStats", diquStats);
+
             request.getRequestDispatcher("/admin/dashboard.jsp").forward(request, response);
         } else {
             // If user is not an admin or not logged in, redirect to login

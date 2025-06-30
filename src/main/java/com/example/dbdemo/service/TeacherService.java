@@ -82,4 +82,29 @@ public class TeacherService {
         }
         return Collections.emptyList();
     }
+
+    /**
+     * 教师端：按教师ID、学期、课程名称模糊查询授课
+     */
+    public List<Map<String, Object>> getMyTaughtCourses(String jsbh, String xq, String kcmc) {
+        try {
+            List<Jiaoxueban> list = jiaoxuebanDAO.findByTeacherAndCondition(jsbh, xq, kcmc);
+            List<Kecheng> kechengList = kechengDAO.findAll();
+            return list.stream().map(jxb -> {
+                Map<String, Object> map = new HashMap<>();
+                map.put("zyc_jxbbh", jxb.getZyc_jxbbh());
+                map.put("zyc_jxbmc", jxb.getZyc_jxbmc());
+                // 课程信息
+                Kecheng kc = kechengList.stream().filter(k -> k.getZyc_kcbh() == jxb.getZyc_kcbh()).findFirst().orElse(null);
+                map.put("zyc_kcmc", kc != null ? kc.getZyc_kcmc() : "");
+                map.put("zyc_kkxq", kc != null ? kc.getZyc_kkxq() : ""); // 学期
+                map.put("zyc_sksj", jxb.getZyc_sksj());
+                map.put("zyc_skdd", jxb.getZyc_skdd());
+                return map;
+            }).collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
 }

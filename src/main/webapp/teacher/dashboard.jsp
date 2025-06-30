@@ -52,6 +52,8 @@
             <form action="${pageContext.request.contextPath}/teacher/dashboard" method="get">
                 <label for="semester">按学期查询:</label>
                 <input type="text" id="semester" name="semester" value="${selectedSemester}" placeholder="例如: 2023-2024-1">
+                <label for="courseName" style="margin-left:1rem;">课程名称:</label>
+                <input type="text" id="courseName" name="courseName" value="${selectedCourseName}" placeholder="支持模糊查询">
                 <button type="submit">查询</button>
                 <a href="${pageContext.request.contextPath}/teacher/dashboard">查询全部</a>
             </form>

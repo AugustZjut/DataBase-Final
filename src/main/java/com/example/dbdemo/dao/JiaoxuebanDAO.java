@@ -153,5 +153,52 @@ public class JiaoxuebanDAO {
         }
         return null;
     }
+
+    /**
+     * 教师端：按教师ID、学期、课程名称模糊查询教学班
+     */
+    public List<Jiaoxueban> findByTeacherAndCondition(String jsbh, String xq, String kcmc) {
+        List<Jiaoxueban> list = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        String sql = "SELECT j.*, k.zyc_kcmc, k.zyc_kkxq FROM zhouyc_jiaoxueban j JOIN zhouyc_kecheng k ON j.zyc_kcbh = k.zyc_kcbh WHERE j.zyc_jsbh = ?";
+        if (xq != null && !xq.isEmpty()) {
+            sql += " AND k.zyc_kkxq LIKE ?";
+        }
+        if (kcmc != null && !kcmc.isEmpty()) {
+            sql += " AND k.zyc_kcmc LIKE ?";
+        }
+        try {
+            conn = DBUtil.getConnection();
+            ps = conn.prepareStatement(sql);
+            int idx = 1;
+            ps.setString(idx++, jsbh);
+            if (xq != null && !xq.isEmpty()) {
+                ps.setString(idx++, "%" + xq + "%");
+            }
+            if (kcmc != null && !kcmc.isEmpty()) {
+                ps.setString(idx++, "%" + kcmc + "%");
+            }
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Jiaoxueban j = new Jiaoxueban();
+                j.setZyc_jxbbh(rs.getInt("zyc_jxbbh"));
+                j.setZyc_jxbmc(rs.getString("zyc_jxbmc"));
+                j.setZyc_sksj(rs.getString("zyc_sksj"));
+                j.setZyc_skdd(rs.getString("zyc_skdd"));
+                j.setZyc_kcbh(rs.getInt("zyc_kcbh"));
+                j.setZyc_jsbh(rs.getString("zyc_jsbh"));
+                j.setZyc_xdrs(rs.getInt("zyc_xdrs"));
+                // 可扩展：j.setKcmc(rs.getString("zyc_kcmc"));
+                list.add(j);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            DBUtil.close(rs, ps, conn);
+        }
+        return list;
+    }
     // 可继续添加其他方法
 }
