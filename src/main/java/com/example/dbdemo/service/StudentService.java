@@ -102,4 +102,16 @@ public class StudentService {
         }
         return result;
     }
+
+    /**
+     * 获取学生平均绩点
+     */
+    public Double getStudentAvgGPA(String xh) {
+        try {
+            return xueshengDAO.getAvgGPA(xh);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

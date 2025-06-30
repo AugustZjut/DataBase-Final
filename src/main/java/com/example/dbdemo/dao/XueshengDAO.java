@@ -152,5 +152,32 @@ public class XueshengDAO {
             return 0;
         }
     }
+
+    /**
+     * 获取学生平均绩点（用教学班编号zyc_jxbbh关联课程表）
+     */
+    public Double getAvgGPA(String xh) throws SQLException {
+        String sql = "SELECT SUM(" +
+                "CASE " +
+                "WHEN zyc_cj >= 90 THEN 4.0 " +
+                "WHEN zyc_cj >= 80 THEN 3.0 " +
+                "WHEN zyc_cj >= 70 THEN 2.0 " +
+                "WHEN zyc_cj >= 60 THEN 1.0 " +
+                "ELSE 0 END * COALESCE(kc.zyc_xf,0)) / NULLIF(SUM(COALESCE(kc.zyc_xf,0)),0) AS avg_gpa " +
+                "FROM zhouyc_sc sc " +
+                "JOIN zhouyc_jiaoxueban jxb ON sc.zyc_jxbbh = jxb.zyc_jxbbh " +
+                "JOIN zhouyc_kecheng kc ON jxb.zyc_kcbh = kc.zyc_kcbh " +
+                "WHERE sc.zyc_xh = ?";
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, xh);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                Object obj = rs.getObject("avg_gpa");
+                return obj == null ? null : rs.getDouble("avg_gpa");
+            }
+        }
+        return null;
+    }
     // 可继续添加update/delete等方法
 }

@@ -50,6 +50,17 @@
                 </tr>
                 <tr>
                     <th>行政班</th><td>${studentInfo.zyc_bjmc}</td>
+                    <th>平均绩点</th>
+                    <td>
+                        <c:choose>
+                            <c:when test="${not empty avgGPA}">
+                                <fmt:formatNumber value="${avgGPA}" pattern="#0.00"/>
+                            </c:when>
+                            <c:otherwise>
+                                暂无数据
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
                 </tr>
             </table>
         </c:if>

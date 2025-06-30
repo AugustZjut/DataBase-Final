@@ -31,6 +31,10 @@ public class StudentDashboardServlet extends HttpServlet {
             Xuesheng studentInfo = studentService.getStudentInfo(yonghu.getZyc_zh());
             request.setAttribute("studentInfo", studentInfo);
 
+            // 查询平均绩点
+            Double avgGPA = studentService.getStudentAvgGPA(yonghu.getZyc_zh());
+            request.setAttribute("avgGPA", avgGPA);
+
             String semester = request.getParameter("semester");
             List<Map<String, Object>> gradeList = studentService.getGradeWithCourseName(yonghu.getZyc_zh(), semester);
             request.setAttribute("gradeList", gradeList);
