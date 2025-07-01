@@ -20,6 +20,16 @@ public class XuanKeService {
 
     // 退选
     public boolean withdrawCourse(String xh, String xq, int jxbbh) {
+        // 先查成绩
+        List<Chengji> selected = chengjiDAO.findAll();
+        for (Chengji cj : selected) {
+            if (cj.getZyc_xh().equals(xh) && cj.getZyc_xq().equals(xq) && cj.getZyc_jxbbh() == jxbbh) {
+                if (cj.getZyc_cj() != null) {
+                    // 已有成绩，禁止退选
+                    return false;
+                }
+            }
+        }
         return chengjiDAO.deleteScore(xh, xq, jxbbh);
     }
 }

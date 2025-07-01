@@ -37,7 +37,26 @@ public class SelectCourseServlet extends HttpServlet {
             boolean ok;
             if ("withdraw".equals(action)) {
                 ok = xuanKeService.withdrawCourse(xh, xq, jxbbh);
-                msg = ok ? "退选成功！" : "退选失败！";
+                if (ok) {
+                    msg = "退选成功！";
+                } else {
+                    // 判断是否因为已评分
+                    // 再查一次成绩，给出更明确提示
+                    com.example.dbdemo.dao.ChengjiDAO chengjiDAO = new com.example.dbdemo.dao.ChengjiDAO();
+                    java.util.List<com.example.dbdemo.bean.Chengji> list = chengjiDAO.findAll();
+                    boolean hasScore = false;
+                    for (com.example.dbdemo.bean.Chengji cj : list) {
+                        if (cj.getZyc_xh().equals(xh) && cj.getZyc_xq().equals(xq) && cj.getZyc_jxbbh() == jxbbh && cj.getZyc_cj() != null) {
+                            hasScore = true;
+                            break;
+                        }
+                    }
+                    if (hasScore) {
+                        msg = "已评分课程不允许退选！";
+                    } else {
+                        msg = "退选失败！";
+                    }
+                }
             } else {
                 ok = xuanKeService.selectCourse(xh, xq, jxbbh);
                 msg = ok ? "选课成功！" : "选课失败或已选过该课！";
