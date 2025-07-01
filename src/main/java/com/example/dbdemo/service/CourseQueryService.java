@@ -156,7 +156,7 @@ public class CourseQueryService {
                 Kecheng kc = kcMap.get(jxb.getZyc_kcbh());
                 if (kc != null && nextSemester.equals(kc.getZyc_kkxq())) {
                     Map<String, Object> map = new HashMap<>();
-                    // map.put("zyc_jxbbh", jxb.getZyc_jxbbh()); // 不传编号到前端
+                    map.put("zyc_jxbbh", jxb.getZyc_jxbbh()); // 传递教学班编号到前端
                     map.put("zyc_jxbmc", jxb.getZyc_jxbmc());
                     map.put("zyc_sksj", jxb.getZyc_sksj());
                     map.put("zyc_skdd", jxb.getZyc_skdd());

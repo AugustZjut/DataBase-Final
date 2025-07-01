@@ -28,11 +28,11 @@ public class SelectCourseServlet extends HttpServlet {
         if (xh == null) {
             System.out.println("[选课] session中user为空或未登录，xh为null");
         }
-        if (jxbbhStr == null) {
-            System.out.println("[选课] 表单未提交jxbbh参数");
+        if (jxbbhStr == null || jxbbhStr.isEmpty()) {
+            System.out.println("[选课] 表单未提交jxbbh参数或jxbbh为空字符串");
         }
-//         System.out.println("[选课] xq参数=" + xq + "，jxbbh=" + jxbbhStr + "，action=" + action);
-        if (xh != null && jxbbhStr != null) {
+        // System.out.println("[选课] xq参数=" + xq + "，jxbbh=" + jxbbhStr + "，action=" + action);
+        if (xh != null && jxbbhStr != null && !jxbbhStr.isEmpty()) {
             int jxbbh = Integer.parseInt(jxbbhStr);
             boolean ok;
             if ("withdraw".equals(action)) {
